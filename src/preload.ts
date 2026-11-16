@@ -1,3 +1,8 @@
-// oxlint-disable eslint-plugin-unicorn/no-empty-file
-// See the Electron documentation for details on how to use preload scripts:
-// https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts
+import { contextBridge, ipcRenderer } from "electron";
+
+contextBridge.exposeInMainWorld('secureStore', {
+    setItem: (key: string, value: string) => ipcRenderer.invoke('store:set', key, value),
+    getItem: (key: string) => ipcRenderer.invoke('store:get', key),
+    removeItem: (key: string) => ipcRenderer.invoke('store:remove', key),
+    clear: () => ipcRenderer.invoke('store:clear'),
+});
